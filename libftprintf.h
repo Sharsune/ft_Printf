@@ -17,8 +17,10 @@
 # include "libft/libft.h"
 
 int ft_printf(const char *str, ...);
-int	counting_putchar(char c, int fd);
+int	counting_putchar(int c, int fd);
 int	printstr_fd(char *str, int fd);
-
+int	ft_print_hex_fd(unsigned int nb, const char *str, int fd);
+int	ft_print_unsigned_fd(unsigned int nb, int fd);
+int	ft_print_pointer_fd(unsigned long long nb, int fd);
 
 #endif
