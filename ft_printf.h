@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIBFTPRINTF_H
-# define LIBFTPRINTF_H
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
 # include <stdarg.h>
-# include "libft/libft.h"
+# include <unistd.h>
 
-int ft_printf(const char *str, ...);
+int	ft_printf(const char *str, ...);
 int	counting_putchar(int c, int fd);
 int	printstr_fd(char *str, int fd);
 int	ft_print_hex_fd(unsigned int nb, const char *str, int fd);

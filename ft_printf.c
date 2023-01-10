@@ -20,7 +20,7 @@
 //• %X Prints a number in hexadecimal (base 16) uppercase format.
 //• %% Prints a percent sign.
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
 int	counting_putchar(int c, int fd)
 {
@@ -35,7 +35,7 @@ int	printstr_fd(char *str, int fd)
 	i = 0;
 	print_result = 0;
 	if (!str)
-		return (0);
+		return (write(1, "(null)", 6));
 	while (str[i] != '\0')
 	{
 		print_result += counting_putchar(str[i], fd);
@@ -48,7 +48,7 @@ int	printnbr_fd(int nb, int fd)
 {
 	long	temp;
 	int		print_result;
-	
+
 	temp = nb;
 	print_result = 0;
 	if (nb < 0)
@@ -66,33 +66,37 @@ int	printnbr_fd(int nb, int fd)
 	return (print_result);
 }
 
-static int	check_format(va_list args, const char *str, int i)
+static int	check_format(va_list args, const char str)
 {	
 	int	print_result;
 
 	print_result = 0;
-	if (str[i] == 'c')
+	if (str == 'c')
 		print_result += counting_putchar(va_arg(args, int), 1);
-	else if (str[i] == 's')
+	else if (str == 's')
 		print_result += printstr_fd(va_arg(args, char *), 1);
-	else if (str[i] == 'p')
-		print_result += ft_print_hex_fd(va_arg(args, unsigned long long), str, 1);
-	else if (str[i] == 'd' || str[i] == 'i')
+	else if (str == 'p')
+	{
+		print_result += write(1, "0x", 2);
+		print_result += ft_print_pointer_fd(\
+		va_arg(args, unsigned long long), 1);
+	}
+	else if (str == 'd' || str == 'i')
 		print_result += printnbr_fd(va_arg(args, int), 1);
-	else if (str[i] == 'u')
+	else if (str == 'u')
 		print_result += ft_print_unsigned_fd(va_arg(args, unsigned int), 1);
-	else if (str[i] == 'x' || str[i] == 'X')
-		print_result += ft_print_hex_fd(va_arg(args, unsigned int), str, 1);
-	else if (str[i] == '%')
-		print_result += write(1, str, 1);
-	return(print_result);
+	else if (str == 'x' || str == 'X')
+		print_result += ft_print_hex_fd(va_arg(args, unsigned int), &str, 1);
+	else if (str == '%')
+		print_result += write(1, &str, 1);
+	return (print_result);
 }
 
-int ft_printf(const char *str, ...)
+int	ft_printf(const char *str, ...)
 {
-	va_list args;
-	int	print_result;
-	int	i;
+	va_list	args;
+	int		print_result;
+	int		i;
 
 	print_result = 0;
 	i = 0;
@@ -101,13 +105,16 @@ int ft_printf(const char *str, ...)
 	{
 		if (str[i] == '%')
 		{	
-			print_result += check_format(args, &str[i+1], i);
+			i++;
+			print_result += check_format(args, str[i]);
 			i++;
 		}
 		else
-			print_result += write(1, str, 1);
-		i++;
+		{	
+			print_result += write(1, &str[i], 1);
+			i++;
+		}
 	}
 	va_end(args);
-	return(print_result);
+	return (print_result);
 }

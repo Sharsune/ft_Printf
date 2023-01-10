@@ -12,7 +12,7 @@
 
 NAME = libftprintf.a
 
-SRC = ft_printf.c ft_print_hex_fd.c ft_print_unsigned_fd.c
+SRC = ft_printf.c ft_printf_utils.c
 
 OSRC = ${SRC:.c=.o}
 
